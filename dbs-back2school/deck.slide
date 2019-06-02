@@ -1,0 +1,140 @@
+Go in Enterprise Context
+An introductory workshop
+12:34 1 Jun 2019
+Tags: golang, enterprise, workshop, beginner
+
+Stanley Nguyen
+Software Engineer, Visa Inc.
+hung.ngn.the@gmail.com
+https://stanleynguyen.github.io
+@stanley_ngn
+
+* Golang
+
+- compiled, concurrent, garbage-collected, statically typed
+- small, opionionated
+- efficient, scalable, and productive
+
+.image images/gocloud.jpg
+.caption _Gophers_building_a_cloud_system_ by [[https://www.instagram.com/reneefrench/][Renée French]]
+
+: What is Go exactly? It's a compiled, concurrent, garbage-collected, statically typed language.
+: It's small and opionionated, efficient, scalable, and productive.
+: Go is not created to be a breakthrough in programming language design but rather
+: an excellent tool for large software projects.
+
+* Creators of Go
+.image images/creators.png
+.caption _Robert_Griesemer,_Rob_Pike,_Ken_Thompson_(left_to_right)_
+
+: They are the veterans who conceived the Golang baby, with experience in the like
+: of UNIX, Javascript V8 Engine
+
+* Golang
+.image images/googletrend.jpg
+.caption _Golang_on_Google_Trend_
+
+: Go has captured growing traction since its creation
+: But the important question is whether this growth is sustainable?
+: Will it make a mark in the software world, adopted and used by the majority of
+: enterprises?
+
+* Challenges in Enterprise Software Development
+
+* Problems addressed by Go at Google
+- slow builds
+- uncontrolled dependencies
+- developers' opionions
+- maintainability (readibility, documentation, etc)
+- costly updates
+- difficulty in writing automated tools
+
+: Let's start with the problems that motivates Google to dedicate resources to give birth to Go.
+: In big organisations like Google, problems like ... are very common. Go was designed with specific features addressing those issues
+
+* Dependencies in Go
+- unused dependencies as compile-time error
+- single object file approach
+- no cyclic dependency
+
+* Unused dependencies
+.image images/error.png
+
+: This guarantees the precision in Go dependency tree, ensuring no extraneous edges
+: Making it compile-time error might seem to be trivial but in my opinion, it'more
+: about changing the engineering team mindset. I have seen unused import statements
+: in a Java program that were committed years back but no one in the team bothers
+: to remove.
+
+* Single Object File Approach
+
+TLDR
+
+  package A imports package B
+  package B imports package C
+  package A does *not* import package C
+
+: Some of you might be wondering how this makes sense and how it would help with compilation efficiency. The idea is that when A is compiled, the compiler reads the object file for B, not its source code. That object file for B contains all the type information necessary for the compiler to execute "import B", which includes all information about C that B will need at compile time.
+: Basically, the object file of B includes type information for all dependencies of B that affect its public interface. Compared to C and C++, instead of exactly one file per dependency, the compiler has multiple include of include files to handle, making it exponentially slower. Even Java compiler has some elements of this approach
+
+* Dependencies in Go
+- 50 times faster than C++ according to Go Team benchmark
+.image images/compiling.png
+.caption _comic_ by [[https://xkcd.com/][xkcd]]
+
+: This approach combined with no unused nor cyclic dependency policy, Go compiler, in Rob Pike's words, "turns minutes into seconds, coffee breaks into interactive build".
+: I'm so sorry that Go adoption might spell an end to our coffee breaks, but that also means we can get our work done faster and have more time to ourselves and our families.
+
+* Go Syntax
+- 25 keywords
+- name before type
+.code code/trivial/syntax.go /^var count/,/^type Star/
+- multiple return values
+.code code/trivial/syntax.go /^func FnThatReturnsMulti/
+- no default argument
+
+: Syntax in Go is design with simplicity as the first priority. Go only has 25 keywords, compared to 37 of C and 84 of C++.
+: We can return multiple values from a function, which is convenient as compared to in Java, sometimes a new class is needed just for this purpose. Speaking of functions, one feature that was deliberately omitted from Go is default arguments. Defaulted arguments make it easy to patch over API design flaws, resulting in a horrible mess of arguments that are impossible to understand. The lack of default arguments force developers to define more methods which in turn makes the API clearer and more understandable. This, again, emphasizes that Go is not just another new language around the block, it's an attempt to influence engineering teams to be more productive
+
+* Naming
+Exported vs Un-exported
+.code code/trivial/syntax.go /Exported/,/NotExported/
+
+: Go took an unusual approach of defining indentifier visibility. Instead of using keywords like private or public in Java, names in Go carries the information itself - Uppercase initial letter for exported, lowercase initial letter for unexported.
+: This means no more going back and forth to the declaration to discover this information. Again, simplicity for productivity.
+
+* Concurrency
+- Designed in the age of network multicore and networked machines
+- A variant of Communicating Sequential Processes (CSP) with first-class channels
+- "Don't communicate by sharing memory, share memory by communicating"
+.image images/goroutines.png
+
+: Languages like Java, C, depsite still being popular, were designed in the age where most CPUs have only a single core. As a result, most of them treat parallelization as an afterthought.
+: Go has easy, high-level CSP style built-in concurrency support. Go enables simple, safe concurrent programming with the motto ...
+
+* Composition over Inheritance
+- Go is data orientied
+- interfaces in Go are just sets of methods
+.code code/trivial/composition.go /START OMIT/,/END OMIT/
+- composition through interface embedding
+.code code/trivial/embed.go /START OMIT/,/END OMIT/
+
+: Go uses interface to implement polymorphism. The idea of composition over inheritance is predominant in OOP, allowing system to be more flexible with loosely coupled components.
+: Go went one step above languages like Java to ensure that composition is guaranteed by removing classes altogther - the one thing that, if wrongly utilised, causes eternal pain in large codebase.
+
+* Errors
+- errors in Go are just values
+- deliberately simple
+.image images/gopherscable.png
+
+: Errors in Go are just values that can be returned from function, passed around as argument. This is a deliberate choice by the language designers for clarity and readibility.
+: Because error handling with special control structures like try-catch-finally distorts the control flow of programs by interlacing multiple overlapping flows that interact in complex ways, it's better to be left out.
+: Errors in the Go way might be more verbose but more straightforward and easier to understand.
+
+* Tooling
+- integrated within the language design
+- gofmt, golint, etc
+.image images/gopherswrench.jpg
+
+: As rarely mentioned in language design discussion, tooling is as much important for a language ecosystem. And as developers, we like to wage wars over our opinions. Should we use PrettierJS or StandardJS, Airbnb or Google coding standards?
+: Go put an end to this by having tooling built-in like gofmt to format source files, golint to checking code standards. Developers can then put more focus on things that matter.
