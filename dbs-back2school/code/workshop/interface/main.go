@@ -9,13 +9,13 @@ import (
 // START OMIT
 
 func main() {
-	pete := &oop.Person{
+	pete := oop.Person{
 		Name: "Peter"}
-	askForName(pete)
+	askForName(&pete)
 
-	optimusPrime := &oop.HumanLikeAlien{
+	optimusPrime := oop.HumanLikeAlien{
 		Eman: "Optimus Prime"}
-	askForName(optimusPrime)
+	askForName(&optimusPrime)
 }
 
 func askForName(h oop.Human) {
