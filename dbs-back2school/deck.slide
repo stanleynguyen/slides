@@ -1,6 +1,5 @@
 Go in Enterprise Context
 An introductory workshop
-12:34 1 Jun 2019
 Tags: golang, enterprise, workshop, beginner
 
 Stanley Nguyen
@@ -57,6 +56,9 @@ https://stanleynguyen.github.io
 - single object file approach
 - no cyclic dependency
 
+.image images/movinggopher.png
+.caption _Moving_gopher_ by [[https://github.com/ashleymcnamara][Ashley McNamara]]
+
 * Unused dependencies
 .image images/error.png
 
@@ -111,6 +113,7 @@ Exported vs Un-exported
 
 : Languages like Java, C, depsite still being popular, were designed in the age where most CPUs have only a single core. As a result, most of them treat parallelization as an afterthought.
 : Go has easy, high-level CSP style built-in concurrency support. Go enables simple, safe concurrent programming with the motto ...
+: We will see this in action later on during the workshops' exercises.
 
 * Composition over Inheritance
 - Go is data orientied
@@ -138,3 +141,130 @@ Exported vs Un-exported
 
 : As rarely mentioned in language design discussion, tooling is as much important for a language ecosystem. And as developers, we like to wage wars over our opinions. Should we use PrettierJS or StandardJS, Airbnb or Google coding standards?
 : Go put an end to this by having tooling built-in like gofmt to format source files, golint to checking code standards. Developers can then put more focus on things that matter.
+
+* How does Go help me?
+.image images/gopherlifting.gif
+.caption by [[https://twitter.com/marcusolsson][Marcus Olsson]]
+
+: That's how Go helps Google solves some of their problems. How do we relate it to our situations and check the implication of Go daoption for our organisations?
+: As previously discussed, we shall all agree that Go is simple. Nonetheless, simplicity is a ridiculously powerful idea that can bring about substaintial benefits.
+
+* Go is simple
+- opionated => focus on things that matter
+- straightforward, readable => easy to maintain, to onboard new hires
+.image images/gophercodereview.png
+
+: Have you ever gotten pull request comments along the line of "You can tweak this a bit so the code if more concise". There were times I spent 80% of my after-review effort just to make the code look pretty according to my reviewers' point of views. Go's opionionated design will save both of the reviewees and reviewers' time
+: Go's simplicity also makes it super readable. I was struggling to get this Go present package to work with Heroku dynamic port model but I could easily dive in the source code and get it working in 15 minutes without even Googling. Imagine how big of an impact this would make on an organisations with millions of lines of codes and thousands of developers.
+: There we have it, happy developers, happy working evironment with lower cost to sustain.
+
+* Go is stable
+- backward-compatibility
+- commercially backed open source
+
+.image images/ian.jpg
+.caption _Ian_Lance_Taylor_at_Gopherpalooza_2018_
+
+: One of the aspect that made Java successful in Enterprise environment is backward-compatibility. It made good use of the deprecated annotation to make sure your code always run. The team behind Go2 paid a lot of attention to this, as Ian from Go2 team mentioned in one of his talks: "We're looking at the success of C with not that many changes, and the success of Java with not that many changes, and we want stability."
+: Go has also been heavily used in enterprises with the like of Google, Uber, Netflix. If those companies place the bets on Go, I believe it's here to stay.
+
+* Go is scalable
+- cross-compilation
+- small memory foot-print
+- small deployment size
+.image images/godocker.jpg
+
+: Cross-compilation in Go is as easy as setting an env varible for the build command. We can cross compile for different OSes like windows, linux, darwin, android and different architectures like arm, 386. You name it, Go has it.
+: Unlike Java, Python, or Javascript, Go programs don't need huge and complex infrastructure like the JVM or V8 Engine, saving us hundreds of MBs in RAM, which in turns cut down cost on cloud environments.
+: With the recent rises in microservices architecture where tons of Docker images have to be deployed. Imagine hundres of Node/Java images of 200MB because of the extra JVM, Node Engine compared to 20MB images with standalone Go binaries. The amount of data travelled over the network from the registry can only be measured in GB. As a result, Go applications can be deployed faster and more frequently, allowing important updates to reach production.
+
+* @enterprises
+.background images/keepcalmnusego.png
+
+: So enterprises, please make the switch. And if you are not yet convinced, let's dive right in some hands-on exercises in our workshop portion.
+
+* Workshop
+.background images/gophers.png
+
+: We will go through and implement basic concepts and general ideas of the language and see them in action.
+
+* Hello World
+.play code/workshop/helloworld/main.go
+
+: As per programming's long running tradition, let's have our hello world program. This tell us about how a Go program with package declaration on top, import statements, and a main function.
+: Go strings are UTF8-encoded as we can see
+
+* Types in Go
+- booleans
+- numberics
+- strings
+- arrays
+- slices
+- maps
+- pointers
+- structs
+- channels
+
+* Basic Types
+.play code/workshop/basictype/main.go /START OMIT/,/END OMIT/
+
+: Go has basic types like booleans, integer, unsigned integer, strings
+: Another point worth noting here is Go's struct
+
+* Variable Declaration & Zero Values
+.play code/workshop/declaration/main.go /START OMIT/,/END OMIT/
+
+* OOP in Go
+.background images/modelsheet.jpg
+
+* Struct and methods
+.code code/workshop/oop/person.go /START OMIT/,/END OMIT/
+.play code/workshop/struct/main.go /START OMIT/,/END OMIT/
+
+: struct type in Go is basically data structures. As I mentioned before, Go's data-orientied, struct is one of the elements that can drive Go program structure.
+: structs in Go can serve as receiver for methods as well, ensuring encapsulation in OOP. Here we have "SayName" method on Person struct receiver.
+
+* Interfaces
+- set of functions to declare behaviors
+- statisfied implicitly
+.code code/workshop/oop/human.go /START OMIT/,/END OMIT/
+.code code/workshop/oop/alien.go /START OMIT/,/END OMIT/
+
+: interfaces in Go is as simple as a set of functions. There's no implements keywords in Go, interfaces are satisfied implicitly
+: Previously we had Person struct that's a Human as it has SayName() method. Let's introduce a HumanLikeAlien struct that knows how to say its name as well
+
+* Interfaces
+.play code/workshop/interface/main.go /START OMIT/,/END OMIT/
+
+: We can observe here both Person and Alien knows how to say their names and satisfy the criteria for being a Human, however, they said their names in different manners as per the implementation.
+
+* Embedding
+- Go's support for composition
+- inner types and methods are promoted
+- promoted methods can satisfy interfaces
+
+* Embedding
+.code code/workshop/oop/junior.go /START OMIT/,/END OMIT/
+.code code/workshop/oop/mentor.go /START OMIT/,/END OMIT/
+
+: Here we have a JuniorDeveloper who can code in a certain set of languages and a Mentor who can train the Junior Dev to code in more languages
+
+* Embedding
+.code code/workshop/oop/senior.go /START OMIT/,/END OMIT/
+.play code/workshop/embedding/main.go /START OMIT/,/END OMIT/
+
+: Now we have a senior dev, who, not only how to code, in a senior way of course, but is also a mentor who can train junior dev
+: Let see him in action for an internal training. <Run Code> After this useful mentorship from our senior dev, the junior dev now can code in 2 new languages
+
+* Composition Exercise
+Use embedding to implement 3 structs type with one that can be a
+.code code/workshop/composition/interface.go /START OMIT/,/END OMIT/
+the other 2 should hold separate business and tech concerns.
+The Founder struct should be able to survive a VC pitch like below
+.code code/workshop/composition/pitch.go /START OMIT/,/END OMIT/
+
+* Composition Exercise - Sample Solution
+.code code/workshop/composition/types.go /START OMIT/,/END OMIT/
+
+* Composition Exercise - Sample Solution
+.play code/workshop/composition_solution/main.go
