@@ -106,7 +106,7 @@ Exported vs Un-exported
 : This means no more going back and forth to the declaration to discover this information. Again, simplicity for productivity.
 
 * Concurrency
-- Designed in the age of network multicore and networked machines
+- Designed in the age of multicore and networked machines
 - A variant of Communicating Sequential Processes (CSP) with first-class channels
 - "Don't communicate by sharing memory, share memory by communicating"
 .image images/goroutines.png
