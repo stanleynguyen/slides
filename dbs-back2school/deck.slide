@@ -268,3 +268,105 @@ The Founder struct should be able to survive a VC pitch like below
 
 * Composition Exercise - Sample Solution
 .play code/workshop/composition_solution/main.go
+
+* Concurrency in Go
+.background images/concurrentgophers.png
+
+* Concurrency vs Parallelism
+- Concurrency is handling multiple tasks at once
+- Parallelism is executing multiple tasks at the same time
+- Concurrency vs Parallelism - Structure vs Execution
+- Concurrent programs can be but not necessarily parallelizable
+.image images/nerdgopher.jpeg
+
+: That was very technical. Let me get down to earth and tell you a story.
+
+* Concurrency vs Parallelism
+.image images/queue.png
+
+: Lisa is a receptionist at Bank of Mars. Her day to day work is to hand out account registration forms, wait for the customer to fill out and  collect it.
+
+* Concurrency vs Parallelism
+.image images/queue2.png
+
+: She will move on to the next customer after collecting the form from the previous one. So that's sequential execution!
+
+* Concurrency vs Parallelism
+.image images/parallelq.png
+
+: As more and more Martians want to open bank accounts, her boss Eva decides to get another counter to ease Lisa's workload. How nice of Eva! Now we have parallel exection.
+
+* Concurrency vs Parallelism
+.image images/concurrentq.png
+
+: However, our receptionists still have to work long hours somehow. So Eva observed and realised that the customers often take very long to fill out the form, so she asks Lisa to try handing out forms to the next martian in line instead of waiting.
+: Eversince, Lisa always manage to finish her work early. That's concurrency
+
+* Concurrency vs Parallelism
+.image images/paraconq.png
+
+: Eva finally decides that is a good strategy and ask all of her employees at the counters to do the same thing. Now we have both concurrency and parallelism.
+: That's the happy ending to our story. Now replace receptionists with CPU cores, customers with external APIs, forms with HTTP requests, we can clearly see how to apply this to improve our system's performances
+: So what does Go provide us with for concurrency.
+
+* Goroutines
+.background images/rnmgo.png
+
+* Goroutines
+- cheap and lightweight *userspace* threads
+- orchestrated by a cooperative scheduler at runtime across multiple CPU cores
+.play -edit code/workshop/goroutines/main.go /START OMIT/,/END OMIT/
+
+: Let's have a look at this program. We have this delayPrint fn that will take half a second every print of the counter. So this program took, as expected, ...
+: Now let's make this function execution here a goroutine. Oh no, the program exited immediately and nothing got printed. How come? Because now there's nothing blocking in the main process hence it exit immediately and tear down all the child goroutines.
+: So how do we deal with this?
+
+* channels
+.background images/channel.jpeg
+
+: channels come to the rescue
+
+* channels
+- pipes that allow values to flow through
+.code code/workshop/channels/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+- sends and receives block until both sender and receiver are ready
+.code code/workshop/channels/main.go /DELAY START OMIT/,/DELAY END OMIT/
+.play code/workshop/channels/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+: Let's visit out previous example from goroutines section again and add a channel in our goroutines. Now the program takes exactly 500 milliseconds as our deplayPrint routines are all sleeping at the same time and sending the values into the channel to be printed out afterwards.
+
+* select
+- is like a switch, but decision based on ability to communicate
+.code code/workshop/select/main.go /FLIP START OMIT/,/FLIP END OMIT/
+.play code/workshop/select/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+* Orchestration Exercise - Space Expedition
+- astronauts on a mission to find gemstone
+- alternate turns to look around and to rest
+- implement `Explore` method
+.play code/workshop/spaceexp/main.go /EXERCISE START OMIT/,/EXERCISE END OMIT/
+
+: Neil and Sally are 2 ambitious astronaut set out to find the previous gemstone somewhere in The Solar System. Once on expedition, they communicate with each other through their mothership Hermes. To make sure that resources are used efficiently, they take turns to explore while the other person rest.
+: Something like this <play the code>. Help our astronaut friend by implementing their strategy inside Explore function with this signature.
+
+* Space Expedition - Sample Solution
+.code code/workshop/spaceexp/main.go /SOLUTION START OMIT/,/SOLUTION END OMIT/
+
+* Orchestration Exercise - Creatures Research
+Steve works at Google Moonshot on natural creatures. He is trying to develop a
+system which can output a report on number of eyes and legs given a list of
+creatures. He proposes to use GoogleImage to look up for the creature's photos
+then run those results through deep-learning eyes and legs detectors. The board
+of directors like his idea and gave him three instances of ImageSearch, and one
+for each EyeDetector and LegDetector. Help Steve by completing `RunResearch`
+inside template pkg.
+Get the exercise code
+.code code/workshop/creatures_research/code.sh /GET START OMIT/,/GET END OMIT/
+Run the exercise code
+.code code/workshop/creatures_research/code.sh /RUN START OMIT/,/RUN END OMIT/
+
+* Creatures Research - Sample Solution
+Find the sample solution here
+.link https://github.com/stanleynguyen/slides/tree/master/dbs-back2school/code/workshop/creatures_research/solution github.com/stanleynguyen/slides/tree/master/dbs-back2school/code/workshop/creatures_research/solution
+.image images/fiveyears.jpg
+.caption by [[https://www.instagram.com/reneefrench/][Renée French]]
