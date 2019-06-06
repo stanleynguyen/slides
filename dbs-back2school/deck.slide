@@ -243,6 +243,8 @@ Exported vs Un-exported
 - inner types and methods are promoted
 - promoted methods can satisfy interfaces
 
+.code code/workshop/embedding/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+
 * Embedding
 .code code/workshop/oop/junior.go /START OMIT/,/END OMIT/
 .code code/workshop/oop/mentor.go /START OMIT/,/END OMIT/
@@ -251,7 +253,7 @@ Exported vs Un-exported
 
 * Embedding
 .code code/workshop/oop/senior.go /START OMIT/,/END OMIT/
-.play code/workshop/embedding/main.go /START OMIT/,/END OMIT/
+.play code/workshop/embedding/main.go /MAIN START OMIT/,/MAIN END OMIT/
 
 : Now we have a senior dev, who, not only how to code, in a senior way of course, but is also a mentor who can train junior dev
 : Let see him in action for an internal training. <Run Code> After this useful mentorship from our senior dev, the junior dev now can code in 2 new languages
@@ -260,7 +262,7 @@ Exported vs Un-exported
 Use embedding to implement 3 structs type with one that can be a
 .code code/workshop/composition/interface.go /START OMIT/,/END OMIT/
 the other 2 should hold separate business and tech concerns.
-The Founder struct should be able to survive a VC pitch like below
+The `Founder` struct should be able to survive a VC pitch like below
 .code code/workshop/composition/pitch.go /START OMIT/,/END OMIT/
 
 * Composition Exercise - Sample Solution
@@ -360,9 +362,10 @@ then run those results through deep-learning eyes and legs detectors. The board
 of directors like his idea and gave him three instances of ImageSearch, and one
 for each EyeDetector and LegDetector. Help Steve by completing `RunResearch`
 inside template pkg.
-Get the exercise code
+
+- Get the exercise code
 .code code/workshop/creatures_research/code.sh /GET START OMIT/,/GET END OMIT/
-Run the exercise code
+- Run the exercise code
 .code code/workshop/creatures_research/code.sh /RUN START OMIT/,/RUN END OMIT/
 
 * Creatures Research - Sample Solution

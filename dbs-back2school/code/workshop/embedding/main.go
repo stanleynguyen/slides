@@ -2,7 +2,24 @@ package main
 
 import "github.com/stanleynguyen/slides/dbs-back2school/code/workshop/oop"
 
-// START OMIT
+// EXAMPLE START OMIT
+
+type Developer struct {
+	UnderstandingOfTechnology float64
+}
+
+type CommunityBuilder struct{}
+
+func (b *CommunityBuilder) BuildCommunity() {}
+
+type DeveloperAdvocate struct {
+	Developer        // DeveloperAdvocate.UnderstandingOfTechnology is valid
+	CommunityBuilder // DeveloperAdvocate.BuildCommunity() is a valid call
+}
+
+// EXAMPLE END OMIT
+
+// MAIN START OMIT
 
 func main() {
 	j := &oop.JuniorDeveloper{
@@ -16,4 +33,4 @@ func internalTraining(j *oop.JuniorDeveloper, s *oop.SeniorDeveloper, langs ...s
 	j.Code()
 }
 
-// END OMIT
+// MAIN END OMIT
