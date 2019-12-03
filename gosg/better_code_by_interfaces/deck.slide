@@ -1,0 +1,168 @@
+Better Code by Interfaces
+🤝👶👧🧒
+Tags: golang, interface
+
+Stanley Nguyen
+Software Engineer, Xendit
+hung.ngn.the@gmail.com
+https://stanleynguyen.me
+@stanley_ngn
+
+* OOP Civil War
+.image images/civil-war.jpg
+
+: not here to ignite the religious war between these guys in OOP but rather to promote good usage of this feature in programming languages & Go specifically
+
+* <code />
+.background images/lego.png
+
+: codes are like lego pieces. As engineer, we break requirements down into small pieces and fill them in with the suitable blocks
+
+* Products
+.image images/millenium-falcon.jpg
+
+: To build awesome systems, products like this Millenium Falcon
+
+* Interfaces
+- communication
+- agreement
+- abstraction
+
+.image images/goshapes.png
+
+: So what's the definition of interface? It's a means for different parts of the system to communicate their needs, agree on behaviors, and provide an nice layer of abstraction against these
+
+* Interface in Go
+- way to specify behaviors for a type
+- a set of methods
+
+.code code/example/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+
+: In Go specifically, interface is a way to specify behaviors for a type. This boils down to a set of method signatures
+
+* Interface in Go
+
+.image images/spectrum.png
+
+: interface in Go is unique, the approach that Go takes is somewhere in between the extreme duck typing of Python where everything can accept anything and Java approach where a class needs to explicitly implements an interface for it to be satisfied
+
+* Interface in Go
+- satisfied implicitly
+
+.code code/human/person.go /START OMIT/,/END OMIT/
+
+: interfaces in Go are implicitly satisied. This human struct type implements human without mentioning anything about the interface
+
+* Interface in Go
+
+.play code/example/main.go /PLAY START OMIT/,/PLAY END OMIT/
+
+: let's have a look at this example. This askForName function accept an instance of any type that implements Human interface so I'm passing a person named Peter. And as expected, he replied with his name.
+
+* Interface in Go
+
+Write interfaces for code that you don't own
+
+.image images/mindblown.gif
+
+: This simple idea of implicit implementation opens up a lot of possibilities for code quality improvement by giving control back to the dependency users, of which I will explain in the next few sections
+
+* Polymorphism
+The ability of an object to take on many forms
+
+.image images/matrix.jpg
+
+: with that introduction to Go interfaces as context, let's dive in the most basic usage of interface - Polymorphism
+
+* Polymorphism in Go
+
+.code code/example/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+
+.code code/human/alien.go /START OMIT/,/END OMIT/
+
+: remember that example Human interface that I introduce at the start? Now we have a HumanLikeAlien type that knows how to say its name, but in reverse order.
+
+* Polymorphism in Go
+
+.play code/poly/main.go /PLAY START OMIT/,/PLAY END OMIT/
+
+: now if I'm to execute that askForName function on an alien. He will be able to answer too, as he is very much human-like
+
+* Polymorphism in Go
+
+.image images/sparta.jpg
+
+: so that's polymorphism in Go, the same polymorphism that allow you to do dependency injection, test mocking, etc
+
+* Abstraction
+
+.background images/abstract.png
+
+: you might be asking? So what makes Go interface different from whatever that I'm getting in Java or C#? Just keep that in mind, we're going to explore that in this section
+
+* Abstraction
+
+.code code/poly/main.go /COMPARE START OMIT/,/COMPARE END OMIT/
+
+.image images/thinking.jpg
+
+: which one of this functions would you rather have in your code. Anyone would like to answer?
+
+* Be conservative in what you do, be liberal in what you accept from others
+~ Robustness Principle ~
+
+.image images/mindblown.gif
+
+: there's also a software development principle called Robustness that mindblew me the first time I knew about it. Yes, I went litterally like that.
+
+* Robustness with Go interface
+
+Accept interfaces, return structs
+
+  func funcName(i INTERFACE) CONCRETETYPE
+
+.image images/gopherlifting.gif
+.caption artwork by [[https://twitter.com/marcusolsson][Marcus Olsson]]
+
+: Robustness principle translated into Go is simply `Accept interfaces, return structs`. This's the powerful idea that I promised at the start my presentation, which Go facilitates and eases the implementation with its implicit satisfaction
+
+* Why returning concrete type?
+
+.image images/rollsafe.jpg
+
+: some of you might be asking why we should return concrete type, instead of an interface with all of the methods
+
+* The bigger the interface, the weaker the abstraction - Rob Pike
+
+.background images/rob.png
+
+: I have a short and sweet answer for you from Go very own birthing father - Rob Pike. Interfaces are abstractions, and the bigger the interface, the weaker the abstraction
+
+* Bigger interface == weaker abstraction
+
+.code code/human/jack.go /START OMIT/,/END OMIT/
+
+.image images/thinking.jpg
+
+: which one of these 2 guys' job can you guess? It's no doubt out sailor Jack Sparrow.
+
+* Bigger interface == weaker abstraction
+No jack-of-all-trade without a clear purpose
+
+.image images/no.gif
+
+: So please don't return a jack-of-all-trade interface without a clear purpose in your Go code, for the sake of your teammates' sanity
+
+* 💻 WE ARE HIRING 💻
+[[https://www.xendit.co/en/careers][https://www.xendit.co/en/careers]]
+
+.image images/xenditlovego.png
+
+
+
+
+
+
+
+
+
