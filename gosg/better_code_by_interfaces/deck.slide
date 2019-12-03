@@ -24,6 +24,12 @@ https://stanleynguyen.me
 : To build awesome systems, products like this Millenium Falcon
 
 * Interfaces
+
+.image images/lego-buttons.png
+
+: interfaces are like those buttons to lego blocks. It tells users how and which pieces of legos should be fitted together
+
+* Interfaces
 - communication
 - agreement
 - abstraction
@@ -44,7 +50,7 @@ https://stanleynguyen.me
 
 .image images/spectrum.png
 
-: interface in Go is unique, the approach that Go takes is somewhere in between the extreme duck typing of Python where everything can accept anything and Java approach where a class needs to explicitly implements an interface for it to be satisfied
+: interface in Go is unique, the approach that Go takes is somewhere in between the extreme duck typing of Python where everything can accept anything and Java approach where a class needs to explicitly implements an interface for it to be satisfied. A bit about my background, I started with Node, a mostly ducktype language with lots and lots of run-time errors then went on to Java with big ass interfaces the contains thoundsands of methods and needs to be changed whenever I try to update some classes. I found the point where Go is at a nice balance.
 
 * Interface in Go
 - satisfied implicitly
@@ -107,6 +113,14 @@ The ability of an object to take on many forms
 .image images/thinking.jpg
 
 : which one of this functions would you rather have in your code. Anyone would like to answer?
+
+* Abstraction
+
+- dependency injection
+- mocking
+- writing generic code
+
+.image images/fiveyears.jpg
 
 * Be conservative in what you do, be liberal in what you accept from others
 ~ Robustness Principle ~
