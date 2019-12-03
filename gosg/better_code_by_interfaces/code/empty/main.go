@@ -6,27 +6,26 @@ import (
 	"github.com/stanleynguyen/slides/gosg/better_code_by_interfaces/code/human"
 )
 
-// ALL START OMIT
-// EXAMPLE START OMIT
+// START OMIT
 
-type Human interface {
-	SayName()
+type Dog struct{}
+
+func (d *Dog) Bark() {
+	fmt.Println("WOOF")
 }
-
-// EXAMPLE END OMIT
-
-// PLAY START OMIT
 
 func main() {
 	pete := human.Person{
 		Name: "Peter"}
 	askForName(&pete)
+	dog := Dog{}
+	askForName(&dog)
 }
 
-func askForName(h Human) {
+func askForName(h interface{}) {
 	fmt.Println("What's your name?")
-	h.SayName()
+	p := h.(*human.Person)
+	p.SayName()
 }
 
-// PLAY END OMIT
-// ALL END OMIT
+// END OMIT

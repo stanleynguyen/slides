@@ -39,18 +39,18 @@ https://stanleynguyen.me
 : So what's the definition of interface? It's a means for different parts of the system to communicate their needs, agree on behaviors, and provide an nice layer of abstraction against these
 
 * Interface in Go
+
+.image images/spectrum.png
+
+: interface in Go is unique, the approach that Go takes is somewhere in between the extreme duck typing of Python where everything can accept anything and Java approach where a class needs to explicitly implements an interface for it to be satisfied. A bit about my background, I started with Node, a mostly ducktype language with lots and lots of run-time errors then went on to Java with big ass interfaces the contains thoundsands of methods and needs to be changed whenever I try to update some classes. I found the point where Go is at a nice balance.
+
+* Interface in Go
 - way to specify behaviors for a type
 - a set of methods
 
 .code code/example/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
 
 : In Go specifically, interface is a way to specify behaviors for a type. This boils down to a set of method signatures
-
-* Interface in Go
-
-.image images/spectrum.png
-
-: interface in Go is unique, the approach that Go takes is somewhere in between the extreme duck typing of Python where everything can accept anything and Java approach where a class needs to explicitly implements an interface for it to be satisfied. A bit about my background, I started with Node, a mostly ducktype language with lots and lots of run-time errors then went on to Java with big ass interfaces the contains thoundsands of methods and needs to be changed whenever I try to update some classes. I found the point where Go is at a nice balance.
 
 * Interface in Go
 - satisfied implicitly
@@ -140,6 +140,10 @@ Accept interfaces, return structs
 
 : Robustness principle translated into Go is simply `Accept interfaces, return structs`. This's the powerful idea that I promised at the start my presentation, which Go facilitates and eases the implementation with its implicit satisfaction
 
+* Declaring interfaces at callsites
+
+.code code/example/main.go /ALL START OMIT/,/ALL END OMIT/
+
 * Why returning concrete type?
 
 .image images/rollsafe.jpg
@@ -150,7 +154,7 @@ Accept interfaces, return structs
 
 .background images/rob.png
 
-: I have a short and sweet answer for you from Go very own birthing father - Rob Pike. Interfaces are abstractions, and the bigger the interface, the weaker the abstraction
+: I have a short and sweet answer for you from Go very own birthing father - Rob Pike.
 
 * Bigger interface == weaker abstraction
 
@@ -158,7 +162,7 @@ Accept interfaces, return structs
 
 .image images/thinking.jpg
 
-: which one of these 2 guys' job can you guess? It's no doubt out sailor Jack Sparrow.
+: which one of these 2 guys' job can you guess? It's no doubt out sailor Jack Sparrow. Interfaces are abstractions and the bigger the interface, the weaker the abstraction. Go introduce implicit satisfaction in its interface to facilitate small interface declaration at callsites.
 
 * Bigger interface == weaker abstraction
 No jack-of-all-trade without a clear purpose
@@ -166,6 +170,38 @@ No jack-of-all-trade without a clear purpose
 .image images/no.gif
 
 : So please don't return a jack-of-all-trade interface without a clear purpose in your Go code, for the sake of your teammates' sanity
+
+* Empty interface
+
+- An interface that doens't have any methods
+
+  interface{}
+
+- Allows functions to take in any data type without checking
+
+: I have just warned you about the danger of interfaces with too many methods. How about its counter part - an empty interface?
+
+* Empty interface
+
+.play code/empty/main.go /START OMIT/,/END OMIT/
+
+* Empty interface
+
+.play code/empty2/main.go /START OMIT/,/END OMIT/
+
+: this pattern can be very useful for pub/sub model where the subscribers don't know sort of messages it's going to receive but rather have to deal with them all
+
+* Empty interface
+
+.image images/empty.jpg
+
+: By using the empty interface in code you are essentially giving your compiler zero knowledge about the data coming in, so all of the benefits of a statically typed language go out the door. The compiler no longer has the ability to tell you that you made a mistake and passed it the wrong data type. You are left to check for errors like that on your own, and you won’t be able to find any bugs until runtime.
+
+* Take-Aways
+
+- Always inject dependencies
+- Declare interfaces at callsites
+- Be careful with empty interface in Go
 
 * 💻 WE ARE HIRING 💻
 [[https://www.xendit.co/en/careers][https://www.xendit.co/en/careers]]
