@@ -197,11 +197,35 @@ No jack-of-all-trade without a clear purpose
 
 : By using the empty interface in code you are essentially giving your compiler zero knowledge about the data coming in, so all of the benefits of a statically typed language go out the door. The compiler no longer has the ability to tell you that you made a mistake and passed it the wrong data type. You are left to check for errors like that on your own, and you won’t be able to find any bugs until runtime.
 
+* Common Pitfalls
+
+.image images/pitfall.png
+
+* pointer vs value
+
+pointers can satisy interfaces with methods implemented with value receiver from the same type but *NOT* vice versa
+
+.code code/pointer-value/main.go /DOG START OMIT/,/DOG END OMIT/
+
+* pointer vs value
+
+.play -edit code/pointer-value/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+: this is actually because Go compiler add the same method implementation for corresponding type's pointer receiver when faced with a value receiver in the code
+
+* nil is not nil
+
+- interface value nil is typed
+- nil without type *doesn't* equal nil with type
+
+.play code/nil/main.go /START OMIT/,/END OMIT/
+
 * Take-Aways
 
 - Always inject dependencies
 - Declare interfaces at callsites
 - Be careful with empty interface in Go
+- Look out for common interface pitfalls
 
 * 💻 WE ARE HIRING 💻
 [[https://www.xendit.co/en/careers][https://www.xendit.co/en/careers]]
