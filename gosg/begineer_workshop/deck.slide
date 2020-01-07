@@ -1,0 +1,344 @@
+Go
+A begineer workshop
+Tags: golang, workshop, beginner
+
+: Did you think that was a typo? That was actually one LOL but I decided to keep it cos it sounds cool, like beginner + engineer = begineer. Today I'll be delivering a Go beginner workshop. Hope that you will learn a thing or two and start falling in love with Go.
+
+GoSG Organizers
+Singapore
+go.sg@gmail.com
+https://www.meetup.com/golangsg/
+@golangsg
+
+* Golang
+
+- compiled, concurrent, garbage-collected, statically typed
+- small, opionionated
+- efficient, scalable, and productive
+
+.image images/gocloud.jpg
+.caption _Gophers_building_a_cloud_system_ by [[https://www.instagram.com/reneefrench/][Renée French]]
+
+: What is Go exactly? It's a compiled, concurrent, garbage-collected, statically typed language.
+: It's small and opionionated, efficient, scalable, and productive.
+: Go is not created to be a breakthrough in programming language design but rather
+: an excellent tool for large software projects.
+
+* Creators of Go
+.image images/creators.png
+.caption _Robert_Griesemer,_Rob_Pike,_Ken_Thompson_(left_to_right)_
+
+: They are the veterans who conceived the Golang baby, with experience in the like
+: of UNIX, Javascript V8 Engine
+
+* Problems addressed by Go
+- slow builds
+- uncontrolled dependencies
+- developers' opionions
+- maintainability (readibility, documentation, etc)
+- costly updates
+- difficulty in writing automated tools
+
+: Let's start with the problems that motivates Google to dedicate resources to give birth to Go.
+: In big organisations like Google, problems like ... are very common. Go was designed with specific features addressing those issues
+
+* Dependencies in Go
+- unused dependencies as compile-time error
+- single object file approach
+- no cyclic dependency
+
+.image images/movinggopher.png
+.caption _Moving_gopher_ by [[https://github.com/ashleymcnamara][Ashley McNamara]]
+
+* Unused dependencies
+.image images/error.png
+
+: This guarantees the precision in Go dependency tree, ensuring no extraneous edges
+: Making it compile-time error might seem to be trivial but in my opinion, it'more
+: about changing the engineering team mindset. I have seen unused import statements
+: in a Java program that were committed years back but no one in the team bothers
+: to remove.
+
+* Single Object File Approach
+
+TLDR
+
+  package A imports package B
+  package B imports package C
+  package A does *not* import package C
+
+: Some of you might be wondering how this makes sense and how it would help with compilation efficiency. The idea is that when A is compiled, the compiler reads the object file for B, not its source code. That object file for B contains all the type information necessary for the compiler to execute "import B", which includes all information about C that B will need at compile time.
+: Basically, the object file of B includes type information for all dependencies of B that affect its public interface. Compared to C and C++, instead of exactly one file per dependency, the compiler has multiple include of include files to handle, making it exponentially slower. Even Java compiler has some elements of this approach
+
+* Dependencies in Go
+- 50 times faster than C++ according to Go Team benchmark
+.image images/compiling.png
+.caption _comic_ by [[https://xkcd.com/][xkcd]]
+
+: This approach combined with no unused nor cyclic dependency policy, Go compiler, in Rob Pike's words, "turns minutes into seconds, coffee breaks into interactive build".
+: I'm so sorry that Go adoption might spell an end to our coffee breaks, but that also means we can get our work done faster and have more time to ourselves and our families.
+
+* Go Syntax
+- 25 keywords
+- name before type
+.code code/trivial/syntax.go /^var count/,/^type Star/
+- multiple return values
+.code code/trivial/syntax.go /^func FnThatReturnsMulti/
+- no default argument
+
+: Syntax in Go is design with simplicity as the first priority. Go only has 25 keywords, compared to 37 of C and 84 of C++.
+: We can return multiple values from a function, which is convenient as compared to in Java, sometimes a new class is needed just for this purpose. Speaking of functions, one feature that was deliberately omitted from Go is default arguments. Defaulted arguments make it easy to patch over API design flaws, resulting in a horrible mess of arguments that are impossible to understand. The lack of default arguments force developers to define more methods which in turn makes the API clearer and more understandable. This, again, emphasizes that Go is not just another new language around the block, it's an attempt to influence engineering teams to be more productive
+
+* Naming
+Exported vs Un-exported
+.code code/trivial/syntax.go /Exported/,/NotExported/
+
+: Go took an unusual approach of defining indentifier visibility. Instead of using keywords like private or public in Java, names in Go carries the information itself - Uppercase initial letter for exported, lowercase initial letter for unexported.
+: This means no more going back and forth to the declaration to discover this information. Again, simplicity for productivity.
+
+* Concurrency
+- Designed in the age of multicore and networked machines
+- A variant of Communicating Sequential Processes (CSP) with first-class channels
+- "Don't communicate by sharing memory, share memory by communicating"
+.image images/goroutines.png
+
+: Languages like Java, C, depsite still being popular, were designed in the age where most CPUs have only a single core. As a result, most of them treat parallelization as an afterthought.
+: Go has easy, high-level CSP style built-in concurrency support. Go enables simple, safe concurrent programming with the motto ...
+: We will see this in action later on during the workshops' exercises.
+
+* Composition over Inheritance
+- Go is data orientied
+- interfaces in Go are just sets of methods
+.code code/trivial/composition.go /START OMIT/,/END OMIT/
+- composition through interface embedding
+.code code/trivial/embed.go /START OMIT/,/END OMIT/
+
+: Go uses interface to implement polymorphism. The idea of composition over inheritance is predominant in OOP, allowing system to be more flexible with loosely coupled components.
+: Go went one step above languages like Java to ensure that composition is guaranteed by removing classes altogther - the one thing that, if wrongly utilised, causes eternal pain in large codebase.
+
+* Errors
+- errors in Go are just values
+- deliberately simple
+.image images/gopherscable.png
+
+: Errors in Go are just values that can be returned from function, passed around as argument. This is a deliberate choice by the language designers for clarity and readibility.
+: Because error handling with special control structures like try-catch-finally distorts the control flow of programs by interlacing multiple overlapping flows that interact in complex ways, it's better to be left out.
+: Errors in the Go way might be more verbose but more straightforward and easier to understand.
+
+* Tooling
+- integrated within the language design
+- gofmt, golint, etc
+.image images/gopherswrench.jpg
+
+: As rarely mentioned in language design discussion, tooling is as much important for a language ecosystem. And as developers, we like to wage wars over our opinions. Should we use PrettierJS or StandardJS, Airbnb or Google coding standards?
+: Go put an end to this by having tooling built-in like gofmt to format source files, golint to checking code standards. Developers can then put more focus on things that matter.
+
+* Hands-on
+.background images/gophers.png
+
+: We will go through and implement basic concepts and general ideas of the language and see them in action.
+
+* Install Go
+
+.link https://golang.org/doc/install
+
+.image images/install.jpeg
+
+* Hello World
+.play code/workshop/helloworld/main.go
+
+: As per programming's long running tradition, let's have our hello world program. This tell us about how a Go program with package declaration on top, import statements, and a main function.
+: Go strings are UTF8-encoded as we can see
+
+* Types in Go
+- booleans
+- numberics
+- strings
+- arrays
+- slices
+- maps
+- pointers
+- structs
+- channels
+
+* Basic Types
+.play code/workshop/basictype/main.go /START OMIT/,/END OMIT/
+
+: Go has basic types like booleans, integer, unsigned integer, strings
+: Another point worth noting here is Go's struct
+
+* Variable Declaration & Zero Values
+.play code/workshop/declaration/main.go /START OMIT/,/END OMIT/
+
+* OOP in Go
+.background images/modelsheet.jpg
+
+* Struct and methods
+.code code/workshop/oop/person.go /START OMIT/,/END OMIT/
+.play code/workshop/struct/main.go /START OMIT/,/END OMIT/
+
+: struct type in Go is basically data structures. As I mentioned before, Go's data-orientied, struct is one of the elements that can drive Go program structure.
+: structs in Go can serve as receiver for methods as well, ensuring encapsulation in OOP. Here we have "SayName" method on Person struct receiver.
+
+* Interfaces
+- set of functions to declare behaviors
+- statisfied implicitly
+.code code/workshop/oop/human.go /START OMIT/,/END OMIT/
+.code code/workshop/oop/alien.go /START OMIT/,/END OMIT/
+
+: interfaces in Go is as simple as a set of functions. There's no implements keywords in Go, interfaces are satisfied implicitly
+: Previously we had Person struct that's a Human as it has SayName() method. Let's introduce a HumanLikeAlien struct that knows how to say its name as well
+
+* Interfaces - Implicit satisfaction
+.play code/workshop/interface/main.go /START OMIT/,/END OMIT/
+
+: We can observe here both Person and Alien knows how to say their names and satisfy the criteria for being a Human, however, they said their names in different manners as per the implementation.
+
+* Interfaces - Implcit satisfaction
+
+Write interfaces for code that you don't own
+=> True inversion of control
+
+.image images/mindblown.gif
+
+: This simple idea of implicit implementation opens up a lot of possibilities for code quality improvement by giving control back to the dependency users. Go conventions includes small interfaces declared at call sites to clearly express the dependencies' behaviors.
+
+* Embedding
+- Go's support for composition
+- inner types and methods are promoted
+- promoted methods can satisfy interfaces
+
+.code code/workshop/embedding/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+
+* Embedding
+.code code/workshop/oop/junior.go /START OMIT/,/END OMIT/
+.code code/workshop/oop/mentor.go /START OMIT/,/END OMIT/
+
+: Here we have a JuniorDeveloper who can code in a certain set of languages and a Mentor who can train the Junior Dev to code in more languages
+
+* Embedding
+.code code/workshop/oop/senior.go /START OMIT/,/END OMIT/
+.play code/workshop/embedding/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+: Now we have a senior dev, who, not only how to code, in a senior way of course, but is also a mentor who can train junior dev
+: Let see him in action for an internal training. <Run Code> After this useful mentorship from our senior dev, the junior dev now can code in 2 new languages
+
+* Composition Exercise
+Use embedding to implement 3 structs type with one that can be a
+.code code/workshop/composition/interface.go /START OMIT/,/END OMIT/
+built by embedding the other 2 that hold separate business and tech concerns.
+The `Founder` struct should be able to survive a VC pitch like below
+.code code/workshop/composition/pitch.go /START OMIT/,/END OMIT/
+
+* Composition Exercise - Sample Solution
+.code code/workshop/composition/types.go /START OMIT/,/END OMIT/
+
+* Composition Exercise - Sample Solution
+.play code/workshop/composition_solution/main.go
+
+* Concurrency in Go
+.background images/concurrentgophers.png
+
+* Concurrency vs Parallelism
+- Concurrency is handling multiple tasks at once
+- Parallelism is executing multiple tasks at the same time
+- Concurrency vs Parallelism - Structure vs Execution
+- Concurrent programs can be but not necessarily parallelizable
+.image images/nerdgopher.jpeg
+
+: That was very technical. Let me get down to earth and tell you a story.
+
+* Concurrency vs Parallelism
+.image images/queue.png
+
+: Lisa is a receptionist at Bank of Mars. Her day to day work is to hand out account registration forms, wait for the customer to fill out and  collect it.
+
+* Concurrency vs Parallelism
+.image images/queue2.png
+
+: She will move on to the next customer after collecting the form from the previous one. So that's sequential execution!
+
+* Concurrency vs Parallelism
+.image images/parallelq.png
+
+: As more and more Martians want to open bank accounts, her boss Eva decides to get another counter to ease Lisa's workload. How nice of Eva! Now we have parallel exection.
+
+* Concurrency vs Parallelism
+.image images/concurrentq.png
+
+: However, our receptionists still have to work long hours somehow. So Eva observed and realised that the customers often take very long to fill out the form, so she asks Lisa to try handing out forms to the next martian in line instead of waiting.
+: Eversince, Lisa always manage to finish her work early. That's concurrency
+
+* Concurrency vs Parallelism
+.image images/paraconq.png
+
+: Eva finally decides that is a good strategy and ask all of her employees at the counters to do the same thing. Now we have both concurrency and parallelism.
+: That's the happy ending to our story. Now replace receptionists with CPU cores, customers with external APIs, forms with HTTP requests, we can clearly see how to apply this to improve our system's performances
+: So what does Go provide us with for concurrency.
+
+* Goroutines
+.background images/rnmgo.png
+
+* Goroutines
+- cheap and lightweight *userspace* threads
+- orchestrated by a cooperative scheduler at runtime across multiple CPU cores
+.play -edit code/workshop/goroutines/main.go /START OMIT/,/END OMIT/
+
+: Let's have a look at this program. We have this delayPrint fn that will take half a second every print of the counter. So this program took, as expected, ...
+: Now let's make this function execution here a goroutine. Oh no, the program exited immediately and nothing got printed. How come? Because now there's nothing blocking in the main process hence it exit immediately and tear down all the child goroutines.
+: So how do we deal with this?
+
+* channels
+.background images/channel.jpeg
+
+: channels come to the rescue
+
+* channels
+- pipes that allow values to flow through
+.code code/workshop/channels/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+- sends and receives block until both sender and receiver are ready
+.code code/workshop/channels/main.go /DELAY START OMIT/,/DELAY END OMIT/
+.play code/workshop/channels/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+: Let's visit out previous example from goroutines section again and add a channel in our goroutines. Now the program takes exactly 500 milliseconds as our deplayPrint routines are all sleeping at the same time and sending the values into the channel to be printed out afterwards.
+
+* select
+- is like a switch, but decision based on ability to communicate
+.code code/workshop/select/main.go /FLIP START OMIT/,/FLIP END OMIT/
+.play code/workshop/select/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+* Orchestration Exercise - Space Expedition
+- astronauts on a mission to find gemstone
+- alternate turns to look around and to rest
+- implement `Explore` method
+.play code/workshop/spaceexp/main.go /EXERCISE START OMIT/,/EXERCISE END OMIT/
+
+: Neil and Sally are 2 ambitious astronaut set out to find the previous gemstone somewhere in The Solar System. Once on expedition, they communicate with each other through their mothership Hermes. To make sure that resources are used efficiently, they take turns to explore while the other person rest.
+: Something like this <play the code>. Help our astronaut friend by implementing their strategy inside Explore function with this signature.
+
+* Space Expedition - Sample Solution
+.code code/workshop/spaceexp/main.go /SOLUTION START OMIT/,/SOLUTION END OMIT/
+
+* Orchestration Exercise - Creatures Research
+Steve works at Google Moonshot on natural creatures. He is trying to develop a
+system which can output a report on number of eyes and legs given a list of
+creatures. He proposes to use GoogleImage to look up for the creature's photos
+then run those results through deep-learning eyes and legs detectors. The board
+of directors like his idea and gave him three instances of ImageSearch, and one
+for each EyeDetector and LegDetector. Help Steve by completing `RunResearch`
+inside template pkg.
+
+- Get the exercise code
+.code code/workshop/creatures_research/code.sh /GET START OMIT/,/GET END OMIT/
+- Run the exercise code
+.code code/workshop/creatures_research/code.sh /RUN START OMIT/,/RUN END OMIT/
+
+* Creatures Research - Sample Solution
+Find the sample solution here
+.link https://github.com/stanleynguyen/slides/tree/master/dbs-back2school/code/workshop/creatures_research/solution github.com/stanleynguyen/slides/tree/master/dbs-back2school/code/workshop/creatures_research/solution
+.image images/fiveyears.jpg
+.caption by [[https://www.instagram.com/reneefrench/][Renée French]]
+
+* ❤️❤️❤️
+.image images/go-love.jpg
+.caption by [[https://github.com/MariaLetta/free-gophers-pack][Maria Letta]] & [[https://www.meetup.com/golangsg/][GoSG]]
