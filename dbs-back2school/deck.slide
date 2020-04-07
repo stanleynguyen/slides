@@ -100,6 +100,7 @@ TLDR
 
 * Naming
 Exported vs Un-exported
+
 .code code/trivial/syntax.go /Exported/,/NotExported/
 
 : Go took an unusual approach of defining indentifier visibility. Instead of using keywords like private or public in Java, names in Go carries the information itself - Uppercase initial letter for exported, lowercase initial letter for unexported.

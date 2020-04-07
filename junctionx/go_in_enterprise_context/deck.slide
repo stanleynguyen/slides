@@ -156,7 +156,9 @@ TLDR
 : A feature that was deliberately omitted from Go is default arguments. Default arguments make it easy to patch over API design flaws, resulting in a horrible mess of arguments that is impossible to understand. The lack of default arguments forces developers to define more methods which in turn makes the API clearer and more understandable. This, again, emphasizes that Go is not just another new language around the block, it's an attempt to influence engineering teams to be more productive. We can return multiple values from a function, which is convenient as compared to in other languages with a single return value, sometimes a new class is needed just for this purpose. Here I have a function that would return a valid Vietnamese greeting sometimes and errors some other times. If I run ... So by having this feature of multiple return values, Go introduces a new error handling pattern that will treat error just like any other value, which I will discuss in a later section.
 
 * Naming
+
 Exported vs Un-exported
+
 .code code/trivial/main/syntax.go /Exported/,/NotExported/
 
 .image images/mic_drop.png
@@ -183,9 +185,11 @@ Exported vs Un-exported
 * Go take on OOP
 
 - Go is data orientied
+
   type Person struct {
     Name string
   }
+
 - interfaces in Go are just sets of methods and satisfied implicitly
 .code code/trivial/composition.go /START OMIT/,/END OMIT/
 - Composition over inheritance
