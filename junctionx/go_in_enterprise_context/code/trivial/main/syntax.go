@@ -13,6 +13,11 @@ type Star struct {
 	brightness int
 }
 
+func exampleFn() int {
+	derivedCount := 0
+	return derivedCount
+}
+
 // END NAME OMIT
 
 // START FN OMIT
@@ -26,14 +31,29 @@ func GreetInVietnamese(seed int64) (greeting string, err error) {
 
 func main() {
 	greet, err := GreetInVietnamese(1)
-	if err != nil {
-		fmt.Printf(":( %s\n", err.Error())
-		return
-	}
+	fmt.Printf(":( %v\n", err)
 	fmt.Printf(":) %s\n", greet)
 }
 
 // END FN OMIT
+
+// START ARG OMIT
+
+func GetMovies() {}
+
+func GetActionMovies() {}
+
+func GetScifiMovies() {}
+
+func GetHorrorMovies() {}
+
+// END ARG OMIT
+
+// START ARGBOOL OMIT
+
+func GetMovieWithBool(isAction bool, isScifi bool, isHorror bool) {}
+
+// END ARGBOOL OMIT
 
 func ThisIsExported() {}
 
