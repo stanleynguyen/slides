@@ -1,0 +1,279 @@
+Go in Enterprise Context
+The next language for large-scale enterprise development?
+Tags: golang, enterprise, beginner
+
+Stanley Nguyen
+Senior Engineer, Xendit
+stanley@xendit.co
+https://stanley.win
+@stanley_ngn
+
+* Golang
+
+- compiled, concurrent, garbage-collected, statically typed
+- small, opionionated
+- efficient, scalable, and productive
+
+.image images/gocloud.jpg
+.caption _Gophers_building_a_cloud_system_ by [[https://www.instagram.com/reneefrench/][Renée French]]
+
+: I'm pretty sure that most of us here have heard a lot about Go but I'm going to do some quick basic introduction of it. Go is a compiled, concurrent, garbage-collected and statically typed language while still being very lightweight, easily scalable. One very important aspect of Go is that it's super opinionated which helps developers to be much more productive. Go wasn't created to be a breakthrough, a revolution in programming language design but rather an excellent tool for large software projects.
+
+* Creators of Go
+.image images/creators.png
+.caption _Robert_Griesemer,_Rob_Pike,_Ken_Thompson_(left_to_right)_
+
+: So who are the creators of Go? Rob Pike, Ken Thompson, and Robert Griesemer. They are the brains behind development of UNIX, Linux, JavaScript V8 Engine. If you ask me who we should trust to write a reliable and scalable software system, these are the first few names that would come up.
+
+* Golang
+.image images/googletrend.png
+.caption _Golang_on_Google_Trends_
+
+: Go has captured growing traction since its creation. But more importantly, is this interest a one-off thing? Or will Go will change how softwares are written and become an essential part of software development in the majority of enterprises.
+
+* What's an enterprise?
+.background images/faang.jpg
+
+: Before we dive deeper, let's get our definition down on what an enterprise is and what that means for developing software.
+
+* ❌❌
+.image images/corp_joke.jpg
+
+: Small disclaimer: The "enterprises" that I'm talking about are not corporates with layers and layers of middle management. This, partly, contributes to the software development challenges for engineers at these organisations, however, it's not something that we would discuss today in this webinar.
+
+* ✔️✔️
+.image images/faang_architecture.png
+
+: The "enterprises" I'm talking about here are strictly in the technical realm. I'm talking about companies with thousands of engineers working with millions of lines of code running on multiple clusters, machines, and data centers all around the world. Companies with the like of Amazon, Netflix. Companies whose service map you get overwhelmed just over a glance at them.
+
+* ✔️✔️
+.image images/gcp_datacenter.jpg
+
+: And Go, was born in such an environment, to solve problems for software engineers at Google who spend most of their time developing humongous software systems.
+
+* Challenges in Enterprise Software Development
+.background images/facepalm_gopher.png
+
+: So what are the challenges in developing software for enterprises? Why working with large scale system is much harder? And what're stopping engineers from working effectively with these systems?
+
+* Slow builds
+
+.image images/slow_builds.jpg
+
+: With more code to begin with, and components of system continuously being built upon, code compilation for these systems could take a huge chunk out of a working day for our engineers. I used to had this meme up on my workstation as a joke when I was working with a Java codebase that would casually take 15 minutes to compile.
+
+* Developers' opinions
+
+.image images/choices.jpg
+
+: Another problems working with large-scale enterprise systems is that we have too many developers to agree on a single solution to a particular task or problem. This is one of the reasons why we split big teams with monolith architectures into smallers one working with microservices. This is also the reason why developer communities like JavaScript came up with linting tools that have millions of downloads weekly like eslint or prettier.
+
+* Maintainability
+
+.image images/confusing_code.jpeg
+
+: With more options to solve a particular problem, developers would have more things to worry about, and of course we would need to context switch more often when reading code and waste more of our precious time. Programs with different coding styles, using different concepts, syntactic sugars usually cost developers time looking at documentation of features that they are not familiar with.
+
+* Maintainability
+
+.image images/lack_of_docs.png
+
+: That, with the fact that code written without accompanying documentation makes maintaining our codebases no difference from solving one hell of a puzzle.
+
+* Maintainability
+
+.image images/silos_graph.png
+
+: And when most of our engineers are blur about the codebase, delivery duration will be substaintially longer while productivity goes right down the floor.
+
+* ... and a host of other problems
+
+- uncontrolled dependencies
+- costly updates
+- difficulty in writing automation tools
+
+.image images/this_is_fine.png
+
+: In addition, there're a bunch of other problems that developers face when working with large scale systems like uncontrolled dependencies, costly updates, and difficulties in writing automation tools. We can't keep pretending that this is the part and parcel of engineers' life. So 10 years ago, Go team decided to completely change how software should be developed.
+
+* How does Go address these developers' pains?
+.background images/gopher_teach_w_background.png
+
+: how does Go address these developers' pain?
+
+* Dependencies in Go
+
+- no circular, unused dependency
+- dependency hoisting
+
+  import "github.com/spf13/cobra"
+
+.image images/movinggopher.png
+.caption _Moving_gopher_ by [[https://github.com/ashleymcnamara][Ashley McNamara]]
+
+: The first thing that Go does differently and more effectively than other programming languages is how it manages dependencies through hoisting and forbidding of unused and circular dependencies.
+
+* Unused dependencies
+
+.image images/error.png
+
+: Reporting unused dependencies as errors guarantees the precision in Go depependency tree and ensures that there's no extraneous edges. Making unused dependencies compile-time error might seem to be trivial but in my opinion, it's more about changing the engineering team's mindset. I have seen unused import statements in a Java program that were committed years back but no one in the team bothers to remove as codes still compile, only slower.
+
+* No Cyclic dependency
+
+.image images/circular_dependency.jpg
+
+: Circular dependencies, though at times could be convenient, most of the times bring about multiple headaches. Our dependency tree, instead of being a tree branch model, goes in cycles that could hardly be broken apart. And this model is definitely detrimental to compiler's performance as now it has to load the whole dependency tree upfront to carry out compilation. Moreover, forbidding cyclic dependencies forces developers to think more carefully about their system design and have better separation of concerns.
+
+* Dependency Hoisting
+- Single object file approach
+TLDR
+
+  package A imports package B
+  package B imports package C
+  package A does *not* import package C
+
+: Dependency hoisting: This could be understood simply as only creating a single object file (or they call it header file in C) for each dependency that our Go program imports. In short, for the Go compiler, package A imports package B while package B imports package C but package A doesn't import package C. You must be wondering how this makes sense and how it would help with compilation efficiency. The idea is that when A is compiled, the compiler reads the object file for B, not its source code, That object file for B contains all the type information necessary for the compiler to execute "import B", which includes all information about C that B will need at compile time. Basically, the object file of B includes that type information for all dependencies of B that affect its public interface. Compared to C and C++, instead of exactly one file per dependency, the compiler has multiple include of include files to handle, making it exponentially slower. Even Java compiler has some elements of the this approach to make it faster.
+
+* Dependencies in Go
+- 50 times faster than C++ according to Go Team benchmark
+.image images/compiling.png
+.caption _comic_ by [[https://xkcd.com/][xkcd]]
+
+: This approach combined with forbidding unused and cyclic dependencies helps Go compiler, in Rob Pike's words, "turn minutes into seconds, coffee breaks into interactive builds". I'm so sorry that Go adoption might spell an end to our office coffee breaks, but that also means we can get our work done faster and have more time to ourselves and our families.
+
+* Syntax
+- 25 keywords
+- name before type
+.code code/trivial/main/syntax.go /START NAME OMIT/,/END NAME OMIT/
+
+: Moving on to syntax. Go's syntax was designed with simplicity as the first priority. Go only has 25 keywords, as compared to 37 of C and 84 of C++. In Go, variable names are placed in front of type and could be simplified to derived syntax like in Pascal.
+
+* Functions
+
+- no default argument
+.code code/trivial/main/syntax.go /START ARG OMIT/,/END ARG OMIT/
+.code code/trivial/main/syntax.go /START ARGBOOL OMIT/,/END ARGBOOL OMIT/
+
+: Function: One of the features that Go team intentionally left out is default arguments. Default arguments make it easier to patch over API design flaws in packages' interfaces, resulting in a horrible mess of arguments that are impossible to understand. The lack of default arguments in Go forces developers to define more methods which in turn makes the API clearer and more understandable. A simple example would be that our service streams movies and start with a small number films and query everything at once, but once the userbase grows with a lot more diverse categories of movies. If we don't use Go, we can add more parameters to the original function to satisfy the new needs but that's definitely much harder to read compared to extending your service's interface and add methods for specific purposes. This deliberate choice, again, emphasizes that Go is not just another new language around the block, it's an attempt to influence engineering teams to be more disciplined and productive.
+
+* Functions
+
+- multiple return values
+.play -edit code/trivial/main/syntax.go /START FN OMIT/,/END FN OMIT/
+
+: Go functions don't have default arguments but we can have more than a single return value. Compared to other languages, developers don't need to declare new types just to return more than a single value. Here I have an example program that will return a greeting but sometimes also return an error depends on my luck. I'm gonna try running it now ... The fact that a function can return more than a single value enables Go to a better error handling pattern that treats errors like any other data types, which I will discuss in a later section.
+
+* Naming
+
+Exported vs Un-exported
+
+.code code/trivial/main/syntax.go /Exported/,/NotExported/
+
+.image images/mic_drop.png
+.caption Gopher Mic Drop by [[https://github.com/ashleymcnamara][Ashley McNamara]]
+
+: Go takes an unusual approach of declaring identifier visibility. Instead of using keywords like private or public, protected, which majority of language users would have to Google the scope table before using, names in Go carries the information itself - uppercase initial letter for exported and lowercase initial letter for unexported. No more going back and forth to the declaration of a class to discover where I can use a function. On top of that, engineering teams will have one less worry about code convention. Again, simplicity for productivity.
+
+* Concurrency
+- Designed in the age of multicore and networked machines
+- A variant of Communicating Sequential Processes (CSP) with first-class channels
+- "Don't communicate by sharing memory, share memory by communicating"
+.image images/goroutines.png
+
+: Languages like Java, C, despite still being popular, were designed in the 80-90s when most CPUs have only a single core and most systems run on a single machine. As a result, most of them treat parallelization as an afterthought. For Go, that's one of the top priorities with a high-level and easy-to-use set of syntax. Go enables simple, safe concurrent programming with the motto "Don't communicate by sharing memory, share memory by communicating"
+
+* Concurrency
+
+.code code/channels/main.go /EXAMPLE START OMIT/,/EXAMPLE END OMIT/
+.code code/channels/main.go /DELAY START OMIT/,/DELAY END OMIT/
+.play code/channels/main.go /MAIN START OMIT/,/MAIN END OMIT/
+
+: To have concurrency in Go, we only need to understand 2 simple concepts: goroutines and channels. Goroutines are lightweight userspace threads. They are the equivalent of coroutines in some other languages, not a revolutionary concepts. However, because they are easy to use and performant, goroutines contribued to make the coroutine concepts more popular in an age that we have to make a lot of network calls to meet the demand of microservice architecture. Channel, we can think of them as pipes that data can be sent through between different goroutines to ensure that the routines don't have to operate on a share memory leading to quirky race conditions. Here I have an example program that run 5 different goroutines to print our numbers from 1 to 5 <Run>
+
+* Go take on OOP
+
+- Go is data orientied
+
+  type Person struct {
+    Name string
+  }
+
+- interfaces in Go are just sets of methods and satisfied implicitly
+.code code/trivial/composition.go /START OMIT/,/END OMIT/
+- Composition over inheritance
+
+: Go is data-oriented. Struct type in Go is basically a data structure that can act as a method receiver. We can think of them like Java's classes. Go uses interface to implement polymorphism. In Go we don't have "implements" keyword. Interfaces in Go are satisfied implicitly. this is important as developers can declare small interfaces at call sites like empty slots for injecting implemention of other packages that our programs depend on. This completes dependency inversion as packages in our program can now be self-encapsulated and fully independent from one another. Another important practice in OOP is composition over inheritance. Go went one step above other languages to ensure that composition is guaranteed by removing classes and inheritance altogether - the one thing that, if wrongly utilised, causes eternal pain in large codebase.
+
+* Go take on OOP
+
+.code code/composition/main.go /START FOUNDER OMIT/,/END FOUNDER OMIT/
+.code code/composition/main.go /START PITCH OMIT/,/END PITCH OMIT/
+
+: To see these above ideas in action. I have a Pitch function that receives Founder interface who has a business idea and a tech idea.
+
+* Go take on OOP
+
+.code code/composition/main.go /START TYPE OMIT/,/END TYPE OMIT/
+
+: We can implement a struct satisfying the Founder interface by implementing a BusinessGuy who has a business idea and a TechieGuy with a Tech idea and embed them in a new struct called AspiredEntrepreneur. That's composition - separating concerns into smaller modules and compose them for a bigger need.
+
+* Go take on OOP
+
+.play code/composition/main.go /START MAIN OMIT/,/END MAIN OMIT/
+
+: We can now put this AspiredEntrepreneur into a Pitch. And eventhough we didn't use any implements keyword, our Elon can still pitch successfully as a Founder. <Run> Go get rid of unnecessary features to direct developers towrads better practices.
+
+* Errors
+- errors in Go are just values
+- deliberately simple
+.image images/gopherscable.png
+
+: Errors in Go are just values that can be returned from functions, or passed around as arguments. This is a delibereate choice by the laguage designers for better clarity and readability. Error handling with special controls like try-catch-finally distorts the control flow of programs by interlacing multiple overlapping flows that interact in complex ways. Errors the Go way might be more verbose but more straightforward and easier to understand.
+
+* Errors
+.code code/errors/main.go
+.code code/errors/index.js
+
+: Here I have 2 similar programs written in Go and JavaScript. Looking at the Go program, we can easily identify the happy flow by following the left most indentation, errors are handled beautifully and specifically inside these indented blocks. Compared to the JavaScript program with nested try-catch blocks, the Go program is definitely easier to read.
+
+* Tooling
+- integrated within the language design
+- gofmt, golint, etc
+.image images/gopherswrench.jpg
+
+: As rarely mentioned in language design discussion, tooling is as much important for a language ecosystem. As developers, we like to wage wars over our opinions. Should we use Prettier or StandardJS, Airbnb or Google coding standards? Go put an end to this by having tooling built-in like gofmt to format source files, or golint to check code standards. Developers can then focus efforts on things that really matter.
+
+* How can Go help my organisation?
+.background images/gopherlifting.gif
+
+: That's how Go helps developers solve their problems and work more effectively. What does this mean on the scale of an enterprise? As I mentioned in prior sections, Go is simple. But this simplicity actually help us achieve lots of benefits.
+
+* Go is simple
+- opionated => focus on things that matter
+- straightforward, readable => easy to maintain, to onboard new hires
+.image images/gophercodereview.png
+
+: Have you ever gotten a pull request review comments along the line of "You can tweak this bit so the code is more concise". There were times I spent 80% of my post-review effort just to make the code look pretty according to my reviewer's point of views. Go's opinionated design saves both the contributors and the reviewers' time as there're not a lot of ways to do a task in Go. Go's simplicity also makes it super readable. I was struggling to get this Go present package to work with Heroku dynamic port but I could easily dive into the source code and get it working in 15 minutes without even Googling. Imagine how big of an impact this would make on an organisations with millions lines of codes and thousands of developers. There we have it, happy developers, happy working environment with lower cost to sustain.
+
+* Go is stable
+- backward-compatibility
+- commercially backed open source
+
+.image images/ian.jpg
+.caption _Ian_Lance_Taylor_at_Gopherpalooza_2018_
+
+: One of the aspect that made Java successful in enterprise environment is backward-compatibility. It made good use of the deprecated annotation to make sure your code always run. The team behind Go2 paid a lot of attention to this, as Ian from Go2 team mentioned in one of his talks: "We're looking at the success of C with not that many changes, and the success of Java with not that many changes, and we want stability." Go has also been heavily used in enterprises with the like of Google, Uber, Netflix. If those companies place their bets on Go, I believe it's here to stay.
+
+* Go is scalable
+- cross-compilation
+- small memory foot-print
+- small deployment size
+.image images/godocker.jpg
+
+: Go is scalable. Cross-compilation in Go is simply setting an env variable for the build command. We can cross compile for different OSes like windows, linux, darwin, android and different architectures like ARM, 386. You name it, Go has it. Unlike Java, Python, or JavaScript, Go programs don't need huge and complex infrastructure like the JVM or V8 engine, saving us hundreds of MBs in RAM, which in turns cut down cost on cloud environments. With the recent rises in microservice architecture where tons of Docker images have to be deployed. Imagine hundreds of Node/Java images of 200MB because of the extra JVM and Node engine, compared to less than 20MB images with standalone Go binaries. The amount of data travelled over the network from the registry will be substaintially lower. As a result, Go applications can be deployed faster and more frequently, allowing important updates to reach production in a shorter timeframe.
+
+* @enterprises
+.background images/keepcalmnusego.png
+
+: So enterprises, please keep calm and use Go
